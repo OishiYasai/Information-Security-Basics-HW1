@@ -104,29 +104,60 @@ def print_byte_matrix(byte_matrix):
 # Addition of round key
 # byte_matrix[4][4]
 # key_matrix[4][4]
+# XOR the byte_matrix with the key_matrix
 def aes_add_round_key(byte_matrix, key_matrix):
-    pass
-    # Add your implementation of AddRoundKey here.
+    for r in range(4):
+        for c in range(4):
+            byte_matrix[r][c] ^= key_matrix[r][c]
+    return byte_matrix
 
 
 # SubBytes transformation
 # byte_matrix[4][4]
+# retreive the value from the sbox_table and replace the value in the byte_matrix
 def aes_sub_bytes(byte_matrix):
-    pass
-    # Add your implementation of SubBytes here.
+    for r in range(4):
+        for c in range(4):
+            byte_matrix[r][c] = sbox_table[byte_matrix[r][c]]
+    return byte_matrix
 
 
 # ShiftRows transformation
 # byte_matrix[4][4]
 def aes_shift_rows(byte_matrix):
-    pass
-    # Add your implementation of ShiftRows here.
+    temp_matrix = [[0 for _ in range(4)] for _ in range(4)]
+    
+    # Shift through the rows
+    for r in range(4):
+        for c in range(4):
+            temp_matrix[r][c] = byte_matrix[r][(c + r) % 4]
+    
+    # Copy the temporary matrix back to the original matrix
+    for r in range(4):
+        for c in range(4):
+            byte_matrix[r][c] = temp_matrix[r][c]
+    
+    return byte_matrix
 
 
 # MixColumns transformation
 # byte_matrix[4][4]
 def aes_mix_columns(byte_matrix):
-    pass
+    temp_matrix = [[0 for _ in range(4)] for _ in range(4)]
+# Loop to get new values for each element in the matrix
+    for c in range(4):
+        temp_matrix[0][c] = gf256_mul(0x02, byte_matrix[0][c]) ^ gf256_mul(0x03, byte_matrix[1][c]) ^ byte_matrix[2][c] ^ byte_matrix[3][c]
+        temp_matrix[1][c] = byte_matrix[0][c] ^ gf256_mul(0x02, byte_matrix[1][c]) ^ gf256_mul(0x03, byte_matrix[2][c]) ^ byte_matrix[3][c]
+        temp_matrix[2][c] = byte_matrix[0][c] ^ byte_matrix[1][c] ^ gf256_mul(0x02, byte_matrix[2][c]) ^ gf256_mul(0x03, byte_matrix[3][c])
+        temp_matrix[3][c] = gf256_mul(0x03, byte_matrix[0][c]) ^ byte_matrix[1][c] ^ byte_matrix[2][c] ^ gf256_mul(0x02, byte_matrix[3][c])
+    
+    # Copy the temporary matrix back to the original matrix
+    for r in range(4):
+        for c in range(4):
+            byte_matrix[r][c] = temp_matrix[r][c]
+    
+    return byte_matrix
+
 
 
 # Simple test function for the round transformations
@@ -139,7 +170,10 @@ def aes_round_trans():
     # For example, when your student-ID is 0200759947 (i.e. 0xbf75a8b in hex),
     # then the last four bytes of your round key would be 0x0b, 0xf7, 0x5a, 0x8b
     # instead of 0xaf, 0x7f, 0x67, 0x98.
-    round_key = [0x0f, 0x15, 0x71, 0xc9, 0x47, 0xd9, 0xe8, 0x59, 0x0c, 0xb7, 0xad, 0xd6, 0xaf, 0x7f, 0x67, 0x98]
+    # My students id: 0247191934 = 0xEBBD97E in hex
+    # 0x0e, 0xbb, 0xd9, 0x7e
+    # round_key = [0x0f, 0x15, 0x71, 0xc9, 0x47, 0xd9, 0xe8, 0x59, 0x0c, 0xb7, 0xad, 0xd6, 0xaf, 0x7f, 0x67, 0x98] #given round key
+    round_key = [0x0f, 0x15, 0x71, 0xc9, 0x47, 0xd9, 0xe8, 0x59, 0x0c, 0xb7, 0xad, 0xd6, 0x0e, 0xbb, 0xd9, 0x7e] #personal round key
     # Array for the 16-byte result after the four round transformations.
 
     print("plaintext : ")
