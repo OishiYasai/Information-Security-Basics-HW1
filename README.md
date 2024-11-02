@@ -1,21 +1,24 @@
 # Information-Security-Basics-HW1
 
-## Task:
+## Assignment Goals
 
-The file simple aes.c (available on Moodle) contains a simple AES128 implementation
-written in the C programming language. However, the four AES 2round transformations
-are not provided in the source code and still need to be implemented. Then, these four
-round transformations have to be applied to the plaintext block 0123456789abcdeffed-
-cba9876543210 as shown in the function aes round trans, which corresponds to encryption
-with a round-reduced version of AES128 consisting of just a single round. The round key
-(in hex format) is 0f1571c947d9e8590cb7add6af7f6798, but the last four bytes af7f6798
-need to be replaced by the last four bytes of your student-ID number (see comments at
-the beginning of the function aes round trans for an example). In order to get the full
-points for this question, the correct ciphertext (after applying the four round transforma-
-tions as shown in aes round trans) as well as the source code of the implementation of
-the four round transformations have to be submitted. Please copy the source code of the
-four round transformations into the PDF file that contains the answers of this homework,
-i.e. do not attach them as a separate file. There is no strict requirement to write the
-implementation of the round transformations in C, i.e. using another language like Java
-or Python is permitted. However, it is not allowed to use a library that provides the AES
-round transformations.
+The main tasks for this assignment include:
+
+- Developing the four AES round transformations: **Add Round Key**, **Byte Substitution**, **Shift Rows**, and **Mix Columns**.
+- Sequentially applying these transformations to perform one round of AES-128 encryption on a given plaintext block.
+
+This implementation represents a reduced version of AES-128, performing only a single encryption round rather than the full ten rounds specified by the AES standard.
+
+## Implementation
+
+The key AES transformations are as follows:
+
+1. **add_round_key**: This step combines the current state with the round key using the XOR operation, which blends the key into the encryption.
+2. **sub_bytes**: Each byte in the state matrix is substituted with a new value from the AES S-box, adding complexity to the transformation.
+3. **shift_rows**: The rows of the state matrix are moved by different amounts to improve the mixing of information between columns.
+4. **mix_columns**: The data in each column is mixed together using Galois Field multiplication to ensure better spreading of information.
+
+## Requirements for Submission
+
+- Include the correct ciphertext produced after applying the transformations.
+- Provide the source code of the four round transformations in the PDF file containing your homework answers; do not submit this code as a separate file.
